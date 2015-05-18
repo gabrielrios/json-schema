@@ -24,7 +24,7 @@ module JSON
 
           if required?(property_schema, options) && !data.has_key?(property)
             message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_properties_missing', :property => property)
           end
 
           if data.has_key?(property)
@@ -58,7 +58,7 @@ module JSON
         if diff.size > 0
           properties = diff.keys.join(', ')
           message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}'"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_properties_undefined', :properties => properties, :property => properties)
         end
       end
     end

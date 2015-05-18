@@ -10,7 +10,7 @@ module JSON
         s = data.to_s.split(".")[1]
         if s && s.length > max_decimal_places
           message = "The property '#{build_fragment(fragments)}' had more decimal places than the allowed #{max_decimal_places}"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_max_decimal', :max_decimal_places => max_decimal_places, :property => fragments.last)
         end
       end
     end

@@ -8,7 +8,7 @@ module JSON
 
         if data.clone.uniq!
           message = "The property '#{build_fragment(fragments)}' contained duplicated array values"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_unique_items', :property => fragments.last)
         end
       end
     end

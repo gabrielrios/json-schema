@@ -10,7 +10,7 @@ module JSON
         regexp  = Regexp.new(pattern)
         unless regexp.match(data)
           message = "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match the regex '#{pattern}'"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_pattern', :pattern => pattern, :property => fragments.last)
         end
       end
     end

@@ -49,18 +49,19 @@ module JSON
           break if valid
         end
 
+        property = fragments.last
         if options[:disallow]
           return if !valid
           message = "The property '#{build_fragment(fragments)}' matched one or more of the following types: #{list_types(types)}"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_type_matched_too_many', :types => types, :property => property)
         elsif !valid
           if union
             message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match one or more of the following types: #{list_types(types)}"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_type_no_match', :types => types, :property => property)
             validation_errors(processor).last.sub_errors = union_errors
           else
             message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match the following type: #{list_types(types)}"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_type_no_match_single', :types => types, :property => property)
           end
         end
       end

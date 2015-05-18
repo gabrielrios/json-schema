@@ -3,6 +3,7 @@ require 'json-schema/attribute'
 module JSON
   class Schema
     class NotAttribute < Attribute
+
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         schema = JSON::Schema.new(current_schema.schema['not'],current_schema.uri,validator)
         failed = true
@@ -22,7 +23,7 @@ module JSON
         end
 
         unless failed
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_not', :type => data.class, :property => fragments.last)
         end
       end
     end

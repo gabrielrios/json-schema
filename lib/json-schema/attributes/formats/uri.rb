@@ -10,7 +10,7 @@ module JSON
         begin
           JSON::Util::URI.parse(data)
         rescue JSON::Schema::UriError
-          validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_uri_format', :property => fragments.last)
         end
       end
     end

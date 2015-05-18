@@ -7,7 +7,7 @@ class ExtendedSchemaTest < Minitest::Test
 
       if data & current_schema.schema['bitwise-and'].to_i == 0
         message = "The property '#{build_fragment(fragments)}' did not evaluate to true when bitwise-AND'd with #{current_schema.schema['bitwise-and']}"
-        validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'exteded_schema_test')
       end
     end
   end

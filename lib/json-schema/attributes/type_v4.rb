@@ -14,15 +14,25 @@ module JSON
         return if types.any? { |type| data_valid_for_type?(data, type) }
 
         types = types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
+
+        message, translation_key = if union
+                                     ['one or more of the following types', 'json_schema_error_type_no_match']
+                                   else
+                                     ['the following type', 'json_schema_error_type_no_match_single']
+                                   end
+
+        fragment = build_fragment(fragments)
+        property = fragments.last
+
         message = format(
           "The property '%s' of type %s did not match %s: %s",
-          build_fragment(fragments),
+          fragment,
           data.class,
-          union ? 'one or more of the following types' : 'the following type',
+          message,
           types
         )
 
-        validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors], translation_key, :types => types, :property => property)
       end
     end
   end

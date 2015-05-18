@@ -7,10 +7,11 @@ module JSON
         schema = current_schema.schema
         return unless data.is_a?(acceptable_type) && invalid?(schema, value(data))
 
-        property    = build_fragment(fragments)
+        fragment    = build_fragment(fragments)
+        property    = fragments.last
         description = error_message(schema)
-        message = format("The property '%s' %s", property, description)
-        validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+        message = format("The property '%s' %s", fragment, description)
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors], translation_key, :limit => limit(schema), :exclusive => exclusive?(schema), :property => property)
       end
 
       def self.invalid?(schema, data)
@@ -26,6 +27,10 @@ module JSON
 
       def self.limit(schema)
         schema[limit_name]
+      end
+
+      def self.translation_key
+        "json_schema_error_#{limit_name.downcase}"
       end
 
       def self.exclusive?(schema)

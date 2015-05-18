@@ -13,7 +13,7 @@ module JSON
         when false
           if schema['items'].length < data.length
             message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_additional_items', :property => fragments.last)
           end
         when Hash
           additional_items_schema = JSON::Schema.new(schema['additionalItems'], current_schema.uri, validator)
