@@ -267,6 +267,12 @@ module JSON
         validate!(schema, data, opts.merge(:record_errors => true))
       end
 
+      def fully_validate2(schema, data, opts={})
+        opts[:record_errors] = true
+        validator = JSON::Validator.new(schema, data, opts)
+        validator.validate
+      end
+
       def fully_validate_schema(schema, opts={})
         data = schema
         schema = JSON::Validator.validator_for_name(opts[:version]).metaschema

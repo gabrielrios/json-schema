@@ -16,8 +16,9 @@ module JSON
           end
         }.join(', ')
 
-        message = "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match one of the following values: #{values}"
-        validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+        fragment = build_fragment(fragments)
+        message = "The property '#{fragment}' value #{data.inspect} did not match one of the following values: #{values}"
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_enum', :values => values, :property => fragments.last)
       end
     end
   end

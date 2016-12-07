@@ -44,11 +44,13 @@ module JSON
 
         if validation_error_count == one_of.length
           message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match any of the required schemas"
+          translation_key = 'json_schema_error_one_of_none'
         else
           message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched more than one of the required schemas"
+          translation_key = 'json_schema_error_one_of_too_many'
         end
 
-        validation_error(processor, message, fragments, current_schema, self, options[:record_errors]) if message
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last) if message
         validation_errors(processor).last.sub_errors = errors if message
       end
     end

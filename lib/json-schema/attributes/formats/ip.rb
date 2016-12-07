@@ -17,7 +17,7 @@ module JSON
         family = ip_version == 6 ? Socket::AF_INET6 : Socket::AF_INET
         unless ip && ip.family == family
           error_message = "The property '#{build_fragment(fragments)}' must be a valid IPv#{ip_version} address"
-          validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], 'json_schema_error_ip_format', :ip_version => ip_version, :property => fragments.last)
         end
       end
 

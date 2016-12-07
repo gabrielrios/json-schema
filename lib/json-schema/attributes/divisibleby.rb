@@ -12,10 +12,15 @@ module JSON
 
         factor = current_schema.schema[keyword]
 
+        fragment = build_fragment(fragments)
         if factor == 0 || factor == 0.0 || (BigDecimal.new(data.to_s) % BigDecimal.new(factor.to_s)).to_f != 0
-          message = "The property '#{build_fragment(fragments)}' was not divisible by #{factor}"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          message = "The property '#{fragment}' was not divisible by #{factor}"
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors], translation_key, :factor => factor, :property => fragments.last)
         end
+      end
+
+      def self.translation_key
+        "json_schema_error_#{keyword}"
       end
     end
   end

@@ -2,14 +2,16 @@ module JSON
   class Schema
     class ValidationError < StandardError
       INDENT = "    "
-      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message
+      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message, :translation_key, :context
 
-      def initialize(message, fragments, failed_attribute, schema)
+      def initialize(message, fragments, failed_attribute, schema, translation_key, context)
         @fragments = fragments.clone
         @schema = schema
         @sub_errors = {}
         @failed_attribute = failed_attribute
         @message = message
+        @translation_key = translation_key
+        @context = context
         super(message_with_schema)
       end
 
@@ -27,7 +29,14 @@ module JSON
       end
 
       def to_hash
-        base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message_with_schema, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
+        base = {
+          :schema => @schema.uri,
+          :fragment => ::JSON::Schema::Attribute.build_fragment(fragments),
+          :message => message_with_schema,
+          :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first,
+          :context => @context,
+          :translation_key => @translation_key
+        }
         if !@sub_errors.empty?
           base[:errors] = @sub_errors.inject({}) do |hsh, (subschema, errors)|
             subschema_sym = subschema.downcase.gsub(/\W+/, '_').to_sym

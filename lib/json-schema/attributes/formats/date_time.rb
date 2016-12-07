@@ -9,6 +9,7 @@ module JSON
         # Timestamp in restricted ISO-8601 YYYY-MM-DDThh:mm:ssZ with optional decimal fraction of the second
         if data.is_a?(String)
           error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss.ssZ"
+          translation_key = 'json_schema_error_date_time_format'
           if (m = REGEXP.match(data))
             parts = data.split("T")
 
@@ -16,16 +17,19 @@ module JSON
               Date.parse(parts[0])
             rescue ArgumentError => e
               raise e unless e.message == 'invalid date'
-              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last)
               return
             end
 
-            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m.length < 4
-            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[1].to_i > 23
-            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[2].to_i > 59
-            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[3].to_i > 59
+            begin
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last) and return if m[1].to_i > 23
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last) and return if m[2].to_i > 59
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last) and return if m[3].to_i > 59
+            rescue Exception
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last)
+            end
           else
-            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors], translation_key, :property => fragments.last)
           end
         end
       end

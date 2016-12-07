@@ -29,6 +29,7 @@ class Minitest::Test
 
   def assert_valid(schema, data, options = {}, msg = "#{data.inspect} should be valid for schema:\n#{schema.inspect}")
     errors = validation_errors(schema, data, options)
+
     assert_equal([], errors, msg)
   end
 
